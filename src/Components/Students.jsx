@@ -2,11 +2,12 @@ import React, { useContext } from 'react'
 import {transferFrom} from './Data'
 import {Link} from 'react-router-dom'
 
-const Students = () => {
-
+const Students = ({handleEditClick }) => {
     
 
     const [transferTo] = useContext(transferFrom);
+
+    
     
  
   return (
@@ -30,7 +31,7 @@ const Students = () => {
                 <td>{student.Age}</td>
                 <td>{student.Course}</td>
                 <td>{student.Batch}</td>
-                <td><Link to="/students/edit">Edit</Link></td>
+                <td><Link to={`/students/edit/${student.id}`}>Edit</Link></td>
                 </tr>))}
             </tbody>
         </table>

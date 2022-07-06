@@ -1,66 +1,82 @@
-import React , {useState } from 'react'
-// import { transferFrom } from './Data'
-import { Link } from 'react-router-dom'
+import React, { useContext } from 'react'
 
- const Edit = () => {
-    const [Name , setName ] = useState("")
+import { Link, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { transferFrom } from './Data';
+// import "./style.css";
 
-    const [Age , setAge] = useState("")
+const Edit = () => {
+  const [name, setName] = useState("");
 
-    const [Course , setCourse] = useState("")
+  const [age, setAge] = useState("");
 
-    const [Batch , setBatch] = useState("")
+  const [course, setCourse] = useState("");
 
-    const [students , setStudents]=useState({
-        "Name" : "",
-        "Age" : "",
-        "Course" : "",
-        "Batch" : ""
-    })
+  const [batch, setBatch] = useState("");
 
-    const changeHandler1 = (e)=>{
-        setName(e.target.Name)
-    }
+  const { id } = useParams();
 
-    const changeHandler2 = (e)=>{
-        setAge(e.target.Age)
-    }
+  const [students, setStudents] = useContext(transferFrom);
 
-    const changeHandler3 = (e)=>{
-        setCourse(e.target.Course)
-    }
+  const ChangeHandlerName = (e) => {
+    setName(e.target.value);
+  };
+  const ChangeHandlerAge = (e) => {
+    setAge(e.target.value);
+  };
+  const ChangeHandlerCourse = (e) => {
+    setCourse(e.target.value);
+  };
+  const ChangeHandlerStudent = (e) => {
+    setBatch(e.target.value);
+  };
+  useEffect(() => {
+    students.forEach((element) => {
+      if (element.id === id) {
+        setName(element.Name);
+        setAge(element.Age);
+        setCourse(element.Course);
+        setBatch(element.Batch);
+      }
+    });
+  }, [id, students]);
 
-    const changeHandler4 = (e)=>{
-        setBatch(e.target.Batch)
-    }
+  const SubmitHandler = () => {
+    setStudents((previousV) =>
+      previousV.map((store) =>
+        store.id === id
+          ? {
+              id: id,
+              Name: name,
+              Age: age,
+              Batch: batch,
+              Course: course,
+            }
+          : store
+      )
+    );
+  };
 
-    const submitHandler = ()=>{
-        setStudents([...students,{Name:Name,Age:Age,Course:Course,Batch:Batch}])
-    }
   return (
     <div>
-        <label htmlFor="" className='label'>Name</label>
-    <br />
-    <input type="text" id='name' name='name' value={Name} onChange={changeHandler1} className='input' />
-    <br />
-    <label htmlFor="" className='label'>Age</label>
-    <br />
-    <input type="text" id='age' name='age' value={Age} onChange={changeHandler2} className='input'/>
-    <br />
-    <label htmlFor="" className='label'>Course</label>
-    <br />
-    <input type="text" id='course' name='course' value={Course} onChange={changeHandler3} className='input'/>
-    <br />
-    <label htmlFor="" className='label'>Batch</label>
-    <br />
-    <input type="text" id='batch' name='batch' value={Batch} onChange={changeHandler4} className='input' />
+      <form>
+        <label>Name:</label>
+            <input id="name" type="text" name='name' value={name} onChange={ChangeHandlerName} />
+            <label>Age:</label>
+            <input id="age" type="text" name='age' value={age} onChange={ChangeHandlerAge} />
+            <label>Course:</label>
+            <input id="course" type="text" name='course' value={course} onChange={ChangeHandlerCourse} />
+            <label>Batch:</label>
+            <input id="batch" type="text" name='batch' value={batch} onChange={ChangeHandlerStudent} />
+        <div style={{ marginTop: "25px" }}>
+          <Link to="/students"><button style={{ marginLeft: "25px" }}>Cancel</button></Link>
+          <Link to="/students" onClick={SubmitHandler}><button>Submit</button></Link>
+        </div>      
+    </form>
+      </div>
+    )
+  
 
-    <div>
-        <Link to="/students" className='submit'>Cancel</Link>
-        <Link to="/students" onClick={submitHandler} className='submit'>Confirm</Link>
-    </div>
-    </div>
-  )
-}
+};
 
-export default Edit
+export default Edit;
